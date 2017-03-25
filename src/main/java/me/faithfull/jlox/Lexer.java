@@ -50,6 +50,7 @@ public class Lexer {
             start = current;
             scanToken();
         }
+        tokens.add(new Token(EOF, "", null, line));
         return tokens;
     }
 

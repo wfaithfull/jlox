@@ -1,6 +1,1 @@
-var a = 1;
-var b = 2;
-var string = "Hello World, the result is: ";
-var result = a + b;
-
-print string + result;
+(12+3) == (10+5)
