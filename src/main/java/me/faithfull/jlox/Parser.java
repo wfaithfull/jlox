@@ -97,6 +97,7 @@ public class Parser {
     }
 
     private Expression unaryPrefix() {
+
         if (match(TokenType.BANG, TokenType.MINUS, TokenType.PLUS_PLUS, TokenType.MINUS_MINUS)) {
             Token operator = previous();
             Expression right = unaryPrefix();
@@ -131,6 +132,31 @@ public class Parser {
             // Consume right parenthesis or syntax error
             consume(TokenType.RIGHT_PAREN, "Expected ')' after grouping expression");
             return new Expression.Grouping(expression);
+        }
+
+        // Error productions.
+        if (match(TokenType.BANG_EQUAL, TokenType.EQUAL_EQUAL)) {
+            error(previous(), "Missing left-hand operand.");
+            equality();
+            return null;
+        }
+
+        if(match(TokenType.GREATER, TokenType.GREATER_EQUAL, TokenType.LESS, TokenType.LESS_EQUAL)) {
+            error(previous(), "Expected left operand for equality");
+            comparison();
+            return null;
+        }
+
+        if(match(TokenType.MINUS, TokenType.PLUS)) {
+            error(previous(), "Expected left operand for comparison");
+            term();
+            return null;
+        }
+
+        if(match(TokenType.STAR, TokenType.SLASH)) {
+            error(previous(), "Expected left operand for term");
+            factor();
+            return null;
         }
 
         throw error(peek(), "Expect expression");
