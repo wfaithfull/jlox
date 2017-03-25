@@ -22,6 +22,14 @@ public class AstPrinter implements Expression.Visitor<String> {
     }
 
     @Override
+    public String visitConditionalExpression(Expression.Conditional expression) {
+        return parenthesize(
+                parenthesize("?", expression.conditional) +
+                        parenthesize(":", expression.thenBranch) +
+                        parenthesize(":", expression.elseBranch));
+    }
+
+    @Override
     public String visitPrefixExpression(Expression.Prefix expression) {
         return parenthesize(expression.operator.lexeme, expression.right);
     }

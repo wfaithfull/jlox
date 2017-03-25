@@ -17,6 +17,7 @@ public class GenerateAst {
                 "Binary   : Expression left, Token operator, Expression right",
                 "Grouping : Expression expression",
                 "Literal  : Object value",
+                "Conditional : Expression conditional, Expression thenBranch, Expression elseBranch",
                 "Prefix   : Token operator, Expression right",
                 "Postfix  : Token operator, Expression right"
         ));

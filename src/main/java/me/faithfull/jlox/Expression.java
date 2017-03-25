@@ -6,6 +6,7 @@ abstract class Expression {
     R visitBinaryExpression(Binary expression);
     R visitGroupingExpression(Grouping expression);
     R visitLiteralExpression(Literal expression);
+    R visitConditionalExpression(Conditional expression);
     R visitPrefixExpression(Prefix expression);
     R visitPostfixExpression(Postfix expression);
   }
@@ -48,6 +49,22 @@ abstract class Expression {
     }
 
     final Object value;
+  }
+
+  static class Conditional extends Expression {
+    Conditional(Expression conditional, Expression thenBranch, Expression elseBranch) {
+      this.conditional = conditional;
+      this.thenBranch = thenBranch;
+      this.elseBranch = elseBranch;
+    }
+
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitConditionalExpression(this);
+    }
+
+    final Expression conditional;
+    final Expression thenBranch;
+    final Expression elseBranch;
   }
 
   static class Prefix extends Expression {

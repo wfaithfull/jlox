@@ -27,7 +27,19 @@ public class Parser {
      * expression → equality
      */
     private Expression expression() {
-        return equality();
+        return conditional();
+    }
+
+    private Expression conditional() {
+        Expression expression = equality();
+
+        while(match(TokenType.QUESTION)) {
+            Expression then = expression();
+            consume(TokenType.COLON, "Ternary expression expecting ':' to follow '?'");
+            Expression elseBranch = conditional();
+            expression = new Expression.Conditional(expression, then, elseBranch);
+        }
+        return expression;
     }
 
     /**
