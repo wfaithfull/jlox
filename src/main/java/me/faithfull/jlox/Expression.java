@@ -1,11 +1,13 @@
 package me.faithfull.jlox;
+import java.util.List;
 
 abstract class Expression {
   interface Visitor<R> {
     R visitBinaryExpression(Binary expression);
     R visitGroupingExpression(Grouping expression);
     R visitLiteralExpression(Literal expression);
-    R visitUnaryExpression(Unary expression);
+    R visitPrefixExpression(Prefix expression);
+    R visitPostfixExpression(Postfix expression);
   }
 
   static class Binary extends Expression {
@@ -48,14 +50,28 @@ abstract class Expression {
     final Object value;
   }
 
-  static class Unary extends Expression {
-    Unary(Token operator, Expression right) {
+  static class Prefix extends Expression {
+    Prefix(Token operator, Expression right) {
       this.operator = operator;
       this.right = right;
     }
 
     <R> R accept(Visitor<R> visitor) {
-      return visitor.visitUnaryExpression(this);
+      return visitor.visitPrefixExpression(this);
+    }
+
+    final Token operator;
+    final Expression right;
+  }
+
+  static class Postfix extends Expression {
+    Postfix(Token operator, Expression right) {
+      this.operator = operator;
+      this.right = right;
+    }
+
+    <R> R accept(Visitor<R> visitor) {
+      return visitor.visitPostfixExpression(this);
     }
 
     final Token operator;

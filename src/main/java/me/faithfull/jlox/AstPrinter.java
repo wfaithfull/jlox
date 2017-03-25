@@ -22,7 +22,12 @@ public class AstPrinter implements Expression.Visitor<String> {
     }
 
     @Override
-    public String visitUnaryExpression(Expression.Unary expression) {
+    public String visitPrefixExpression(Expression.Prefix expression) {
+        return parenthesize(expression.operator.lexeme, expression.right);
+    }
+
+    @Override
+    public String visitPostfixExpression(Expression.Postfix expression) {
         return parenthesize(expression.operator.lexeme, expression.right);
     }
 

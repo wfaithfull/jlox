@@ -73,26 +73,37 @@ public class Parser {
     }
 
     private Expression factor() {
-        Expression left = unary();
+        Expression left = unaryPrefix();
 
         while(match(TokenType.STAR, TokenType.SLASH)) {
             Token operator = previous();
-            Expression right = unary();
+            Expression right = unaryPrefix();
             left = new Expression.Binary(left, operator, right);
         }
 
         return left;
     }
 
-    private Expression unary() {
-        if (match(TokenType.BANG, TokenType.MINUS)) {
+    private Expression unaryPrefix() {
+        if (match(TokenType.BANG, TokenType.MINUS, TokenType.PLUS_PLUS, TokenType.MINUS_MINUS)) {
             Token operator = previous();
-            Expression right = unary();
-            return new Expression.Unary(operator, right);
+            Expression right = unaryPrefix();
+            return new Expression.Prefix(operator, right);
         }
 
-        return primary();
+        return unaryPostfix();
     }
+
+    private Expression unaryPostfix() {
+        Expression expression = primary();
+
+        while(match(TokenType.PLUS_PLUS, TokenType.MINUS_MINUS)) {
+            return new Expression.Postfix(previous(), expression);
+        }
+
+        return expression;
+    }
+
 
     private Expression primary() {
         if(match(TokenType.FALSE)) return new Expression.Literal(false);
